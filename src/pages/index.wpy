@@ -1,0 +1,54 @@
+<template>
+  <view class="page">
+    <view class="weui-flex" style="text-align:center;">
+      <view class="weui-flex__item">
+        <button class="weui-btn mini-btn" size="mini" type="{{isMock ? 'primary' : 'warn'}}" @tap="tapMock">{{isMock ? 'mock已打开' : 'mock已关闭'}}</button>
+      </view>
+    </view>
+    <view class="weui-cells__title">路由列表</view>
+    <view class="weui-cells weui-cells_after-title">
+      <repeat for="{{pagelist}}" index="index" item="item" key="key">
+        <navigator url="{{item.url}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">{{index}}. {{item.des}}</view>
+          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+        </navigator>
+      </repeat>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '入口'
+    }
+    onLoad () {
+      // 枚举包含小程序中所有page的对象
+      Object.keys(this.$parent.$pages).forEach(url => {
+        this.pagelist.push({
+          url: url + (this.$parent.$pages[url].config.search || ''),
+          des: this.$parent.$pages[url].config.navigationBarTitleText
+        })
+      })
+      // 获取mock开关值
+      this.isMock = wepy.getStorageSync('mock') === 1
+    }
+
+    data = {
+      pagelist: [],
+      isMock: false
+    }
+
+    methods = {
+      tapMock () {
+        this.isMock = !this.isMock
+        wepy.setStorage({
+          key: 'mock',
+          data: this.isMock ? 1 : 2
+        })
+      }
+    }
+  }
+</script>

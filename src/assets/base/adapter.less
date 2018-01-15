@@ -1,0 +1,126 @@
+@import "fn";
+
+/*margin and padding*/
+ 
+.mt10 {
+  margin-top: 10/@w;
+}
+
+.mr10 {
+  margin-right: 10/@w;
+}
+
+.mb10 {
+  margin-bottom: 10/@w;
+}
+
+/*txt*/
+
+.text-align {
+  text-align: center;
+}
+
+.text-align {
+  text-align: right;
+}
+
+/* 隐藏 & 显示 配合js */
+
+.fn-hide {
+  display: none!important
+}
+
+.fn-show {
+  display: block
+}
+
+.fn-pr {
+  position: relative
+}
+
+
+/* 浮动 */
+
+.fn-left,
+.fl {
+  float: left;
+}
+
+.fn-right,
+.fr {
+  float: right;
+}
+
+
+/* 清除浮动 */
+
+.fn-clear {
+  zoom: 1
+}
+
+.fn-clear:after {
+  clear: both;
+  display: block;
+  visibility: hidden;
+  height: 0;
+  content: '.'
+}
+
+// 图片自动宽度
+.imgauto {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  height: auto
+}
+
+.db {
+  display: -webkit-flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex
+}
+
+.flex-vam {
+  display: -webkit-flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  -webkit-box-align: center
+}
+
+.v {
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column
+}
+
+.fx1 {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1
+}
+
+.vm {
+  display: box;
+  display: -webkit-box;
+  display: -moz-box;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -webkit-box-align: center;
+  -moz-box-align: center
+}
+
+.vh {
+  display: -webkit-box;
+  display: box;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -webkit-box-flex: 1;
+  flex: 1
+}
+
+
+
+

@@ -1,0 +1,25 @@
+/**
+ * 设置边框幅度
+ */
+.radius(@radius:2/@w) {
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+    -ms-border-radius: @radius;
+    -o-border-radius: @radius;
+}
+.t-shadow(@lr:2px, @tb:1px, @r:1px, @c:#de7535){
+  -webkit-text-shadow: @lr  @tb @r @c;
+  -moz-text-shadow:  @lr  @tb @r @c;
+  -ms-text-shadows: @lr  @tb @r @c;
+  -o-text-shadow: @lr  @tb @r @c;
+  text-shadow:  @lr  @tb @r @c;
+}
+.b-shadow(@lr:2px, @tb:1px, @r:4px, @c:#b02c1d){
+  -webkit-box-shadow: -@lr -@tb  @r @c,@lr @tb @r @c,-@lr @tb @r @c,@lr -@tb @r @c;
+  -moz-box-shadow:  -@lr -@tb  @r @c,@lr @tb @r @c,-@lr @tb @r @c,@lr -@tb @r @c;
+  -ms-box-shadows: -@lr -@tb  @r @c,@lr @tb @r @c,-@lr @tb @r @c,@lr -@tb @r @c;
+  -o-box-shadow: -@lr -@tb  @r @c,@lr @tb @r @c,-@lr @tb @r @c,@lr -@tb @r @c;
+  box-shadow: -@lr -@tb  @r @c,@lr @tb @r @c,-@lr @tb @r @c,@lr -@tb @r @c;
+}
+

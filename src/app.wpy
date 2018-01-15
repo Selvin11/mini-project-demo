@@ -1,0 +1,60 @@
+<style lang="less">
+@import './assets/weui/weui.less'; 
+page{
+    font-size: 16px;
+    font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'Wepy',
+      navigationBarTextStyle: 'black',
+      onReachBottomDistance: 0,
+      enablePullDownRefresh: true
+    }
+  }
+
+  globalData = {
+    userInfo: null
+  }
+
+  constructor () {
+    super()
+    this.use('promisify')
+    this.use('requestfix')
+    this.intercept('request', {
+      config (config) {
+        return config
+      },
+      success (res) {
+        return res
+      },
+      fail (res) {
+        return res
+      },
+      complete (res) {
+        return res
+      }
+    })
+  }
+
+  onLaunch() {
+    // 初始化时，关闭mock
+    wepy.setStorage({
+      key: 'mock',
+      data: 2
+    })
+  }
+}
+</script>
