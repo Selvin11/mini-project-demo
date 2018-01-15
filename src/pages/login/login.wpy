@@ -1,0 +1,197 @@
+<template>
+<view>
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell">
+      <view class="weui-cell__hd">
+        <view class="weui-label">手机号</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input" placeholder="您的手机号码" value="{{phone}}" @input="phoneInputHandle"/>
+      </view>
+      <view class="weui-cell__ft">
+        <view class="veri-code" @tap="requestCode" disabled="{{isRequst}}">{{codeBtnText}}</view>
+      </view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__hd">
+        <view class="weui-label">短信验证</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input" placeholder="请输入短信验证码" value="{{veriCode}}" @input="codeInputHanle"/>
+      </view>
+    </view>
+  </view>
+  <view class="btn-submit">
+    <button class="weui-btn" type="warn" disabled="{{!isSubmit}}" @tap="submitCode">{{sumitBtnText}}</button>
+  </view>
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class LoginPage extends wepy.page {
+    config = {
+      navigationBarTitleText: '登录'
+    }
+
+    data = {
+      redirectUrl: '',
+      phone: '', // 手机号
+      veriCode: '', // 验证码
+      isRequst: true, // 请求验证码限制
+      isClickRequstCode: false, // 是否请求过验证码
+      sumitBtnText: '提交',
+      codeBtnText: '获取验证码',
+      isSubmit: false // 提交限制
+    }
+
+    onLoad (params) {
+      // 防止用户点击获取验证码后，切出页面再返回时，导致页面展示错乱
+      let timerId = wepy.getStorageSync('code_timer_id')
+      if (timerId) {
+        clearInterval(timerId)
+      }
+      // 获取跳转至登陆页面的路由
+      this.redirectUrl = params.redirect ? params.redirect : ''
+    }
+
+    watch = {
+      veriCode (val) {
+        this.isSubmit = (val.length === 6 && this.phone.length === 11)
+      },
+      phone (val) {
+        this.isSubmit = (val.length === 11 && this.veriCode.length === 6)
+      }
+    }
+
+    methods = {
+      phoneInputHandle (e) {
+        this.phone = e.detail.value
+      },
+      codeInputHanle (e) {
+        this.veriCode = e.detail.value
+      }
+    }
+
+    requestCode () {
+      if (!(this.phone.length === 11) || isNaN(this.phone)) {
+        wepy.showModal({
+          content: '请输入手机号',
+          showCancel: false,
+          confirmColor: '#ce3b28'
+        })
+        return
+      }
+      // 设置请求验证码
+      this.isClickRequstCode = true
+      // 获取验证码 60s倒数
+      let count = 60
+      this.codeBtnText = count + 's'
+      let timer = setInterval(() => {
+        count -= 1
+        this.codeBtnText = count + 's'
+        if (count === 0) {
+          this.codeBtnText = '重新获取验证码'
+          this.isRequst = false
+          clearInterval(timer)
+        }
+        this.$apply()
+      }, 1000)
+      // 存储此timer至本地
+      wepy.setStorage({
+        key: 'code_timer_id',
+        data: timer
+      })
+      // 发起获取验证码的请求
+      let params = this.phone
+      this.$rest.auth.getCode(null, `${params}/verification_code`).then(res => {
+        if (res.code === 0) {
+          wepy.showModal({
+            content: '获取验证码成功！',
+            showCancel: false,
+            confirmColor: '#ce3b28'
+          })
+        } else {
+          wepy.showModal({
+            content: res.data.error_msg,
+            showCancel: false,
+            confirmColor: '#ce3b28'
+          })
+        }
+      })
+    }
+    submitCode() {
+      // 首先判断有无获取验证码
+      if (!this.isClickRequstCode) {
+        wepy.showModal({
+          content: '请获取验证码',
+          showCancel: false,
+          confirmColor: '#ce3b28'
+        })
+        return
+      }
+      this.sumitBtnText = '验证中...'
+      this.isSubmit = false
+      // 前端过滤不规范手机号
+      if (this.phone.length !== 11) {
+        wepy.showModal({
+          content: '请输入11位手机号',
+          showCancel: false,
+          confirmColor: '#ce3b28'
+        })
+        this.isSubmit = true
+        return
+      }
+      if (!(/^1[34578]\d{9}$/.test(this.phone))) {
+        wepy.showModal({
+          content: '请输入正确手机号',
+          showCancel: false,
+          confirmColor: '#ce3b28'
+        })
+        this.isSubmit = true
+        return
+      }
+      if (this.veriCode.length !== 6) {
+        wepy.showModal({
+          content: '请输入正确验证码',
+          showCancel: false,
+          confirmColor: '#ce3b28'
+        })
+        this.isSubmit = true
+        return false
+      }
+      // 发起用户信息提交的操作
+      let params = {
+        mobile_number: this.phone, // 手机号
+        verify_code: this.veriCode // 验证码
+      }
+      this.$rest.auth.postUser(params).then(res => {
+        this.sumitBtnText = '提交'
+        if (res.code === 0) {
+          let redirectUrl = this.redirectUrl
+          if (redirectUrl) {
+            wepy.navigateTo({
+              url: `/${redirectUrl}`
+            })
+          } else {
+            wepy.navigateTo({
+              url: '/pages/auchall' // 竞拍大厅
+            })
+          }
+        } else {
+          // 验证错误
+          wepy.showModal({
+            content: res.data.error_msg,
+            showCancel: false,
+            confirmColor: '#ce3b28'
+          })
+          this.veriCode = ''
+        }
+      })
+      this.$apply()
+    }
+  }
+</script>
+<style lang="less">
+  @import '../../assets/modules/login/login';
+</style>

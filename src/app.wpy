@@ -9,6 +9,10 @@ page{
 <script>
 import wepy from 'wepy'
 import 'wepy-async-function'
+import '@/mock/index'
+import {checkAccessToken} from '@/common/session'
+import '@/rest/index'
+// import rest from '@/rest/config'
 
 export default class extends wepy.app {
   config = {
@@ -38,7 +42,7 @@ export default class extends wepy.app {
         return config
       },
       success (res) {
-        return res
+        return checkAccessToken(res, this)
       },
       fail (res) {
         return res
