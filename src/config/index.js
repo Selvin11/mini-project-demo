@@ -3,6 +3,6 @@ export default {
     baseUrl: ''
   },
   dev: {
-    baseUrl: ''
+    baseUrl: 'https://api.douban.com/v2'
   }
 }

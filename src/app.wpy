@@ -10,14 +10,15 @@ page{
 import wepy from 'wepy'
 import 'wepy-async-function'
 import '@/mock/index'
-import {checkAccessToken} from '@/common/session'
+// import {checkAccessToken} from '@/common/session'
 import '@/rest/index'
 // import rest from '@/rest/config'
 
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index'
+      'pages/index',
+      'pages/movie/list'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -42,7 +43,8 @@ export default class extends wepy.app {
         return config
       },
       success (res) {
-        return checkAccessToken(res, this)
+        // return checkAccessToken(res, this)
+        return res
       },
       fail (res) {
         return res

@@ -6,5 +6,8 @@ export default {
     getToken: ajax.create('/auth/access_token'),
     getCode: ajax.putWay('/auth'), // 获取验证码
     postUser: ajax.create('/auth/user') // 提交用户信息
+  },
+  movie: {
+    getInTheaterMovies: ajax.query('/movie/in_theaters')
   }
 }

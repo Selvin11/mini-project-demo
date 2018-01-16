@@ -51,7 +51,7 @@ class Ajax {
     let defaultConfig = {
       header: {
         'channelType': 'wx',
-        'content-type': 'application/json' // 默认值
+        'content-type': 'json' // 默认值
       }
     }
     // 获取access_token
