@@ -1,0 +1,25 @@
+<template>
+  <view wx:for="{{movies}}" wx:for-index="index" wx:key="index" wx:for-item="movie" class="weui-media-box weui-flex">
+    <view class="weui-media-box__hd_in-appmsg movie-small-img">
+      <image class="weui-media-box__thumb" src="{{movie.images.small}}" />
+    </view>
+    <view class="weui-media-box__bd_in-appmsg">
+      <view class="weui-media-box__title">{{movie.title}}</view>
+      <view class="weui-media-box__desc">{{movie.original_title}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class PullUp extends wepy.component {
+    props = {
+      movies: {
+        type: Array,
+        default: []
+      }
+    }
+  }
+
+</script>

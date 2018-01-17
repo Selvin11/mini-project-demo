@@ -18,7 +18,8 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
-      'pages/movie/list'
+      'pages/movie/list',
+      'pages/movie/top'
     ],
     window: {
       backgroundTextStyle: 'light',

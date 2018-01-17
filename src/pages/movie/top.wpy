@@ -1,0 +1,80 @@
+<template>
+  <view>
+    <movielist
+      :movies.sync="movies">
+    </movielist>
+    <!-- 下拉加载 -->
+    <pullup
+      :isNoMore.sync="isNoMore"
+      :isLoading.sync="isLoading">
+    </pullup>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import MovieList from '@/components/MovieList'
+  import PullUp from '@/components/PullUp'
+  import pullUpMixin from '@/mixins/pullUpMixin'
+
+  export default class TopMovie extends wepy.page {
+    config = {
+      navigationBarTitleText: '豆瓣电影Top250'
+    }
+
+    data = {
+      movies: []
+    }
+
+    components = {
+      movielist: MovieList,
+      pullup: PullUp
+    }
+
+    mixins = [pullUpMixin]
+
+    onReachBottom () {
+      console.log(1)
+      this.getListData('movies', () => {
+        this.getMovieList().then(res => {
+          if (res) {
+            this.movies = this.movies.concat(res.subjects)
+            this.$apply()
+          }
+        })
+      })
+    }
+
+    onLoad () {
+      this.getMovieList().then(res => {
+        if (res) {
+          this.movies = res.subjects
+          this.$apply()
+        }
+      })
+    }
+
+    getMovieList () {
+      let params = {
+        start: this.start,
+        count: this.count
+      }
+      return this.$rest.movie.getTopMovies(params).then(res => {
+        if (res.subjects) {
+          return res
+        } else {
+          wepy.showModal({
+            content: res.msg
+          })
+        }
+      })
+    }
+  }
+
+</script>
+<style lang="less">
+.movie-small-img {
+  width:118.5rpx;
+  height:165.5rpx;
+}
+</style>

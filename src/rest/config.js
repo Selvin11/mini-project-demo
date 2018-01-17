@@ -8,6 +8,7 @@ export default {
     postUser: ajax.create('/auth/user') // 提交用户信息
   },
   movie: {
-    getInTheaterMovies: ajax.query('/movie/in_theaters')
+    getInTheaterMovies: ajax.query('/movie/in_theaters'), // 豆瓣近期热映电影
+    getTopMovies: ajax.query('/movie/top250') // 豆瓣top250
   }
 }
