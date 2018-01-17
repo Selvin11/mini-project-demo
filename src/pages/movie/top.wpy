@@ -16,10 +16,12 @@
   import MovieList from '@/components/MovieList'
   import PullUp from '@/components/PullUp'
   import pullUpMixin from '@/mixins/pullUpMixin'
+  import pullDownMixin from '@/mixins/pullDownMixin'
 
   export default class TopMovie extends wepy.page {
     config = {
-      navigationBarTitleText: '豆瓣电影Top250'
+      navigationBarTitleText: '豆瓣电影Top250',
+      enablePullDownRefresh: true
     }
 
     data = {
@@ -31,14 +33,25 @@
       pullup: PullUp
     }
 
-    mixins = [pullUpMixin]
+    mixins = [pullUpMixin, pullDownMixin]
+
+    onPullDownRefresh () {
+      // 打开下拉刷新
+      wx.showNavigationBarLoading()
+      this.updatePage(() => {
+        this.getFirstList()
+      })
+      this.isNoMore = false // 修复下拉刷新后，没有重置此状态
+    }
 
     onReachBottom () {
-      console.log(1)
       this.getListData('movies', () => {
         this.getMovieList().then(res => {
           if (res) {
+            this.total = res.total
             this.movies = this.movies.concat(res.subjects)
+            this.isLoading = false
+            this.isNoMore = this.movies.length === this.total
             this.$apply()
           }
         })
@@ -46,12 +59,20 @@
     }
 
     onLoad () {
+      this.getFirstList()
+    }
+
+    getFirstList () {
       this.getMovieList().then(res => {
         if (res) {
+          this.total = res.total
           this.movies = res.subjects
           this.$apply()
         }
       })
+      // 关闭导航刷新
+      wx.hideNavigationBarLoading()
+      wx.stopPullDownRefresh()
     }
 
     getMovieList () {
