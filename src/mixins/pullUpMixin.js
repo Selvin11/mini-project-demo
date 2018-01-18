@@ -12,7 +12,7 @@ export default class pullUpMixin extends wepy.mixin {
 
   getListData (listArrName, cb) {
     if (this[listArrName].length === this.total) {
-      this.isNoMore = true
+      this.isNoMore = this.total !== 0
       return false
     }
 

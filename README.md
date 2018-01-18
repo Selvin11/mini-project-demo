@@ -34,7 +34,7 @@ WePY 是一款让小程序支持组件化开发的框架，通过预编译的手
 ### 待完成
 
 - [x] 列表页面
-- [ ] 下拉刷新以及上拉加载
+- [x] 下拉刷新以及上拉加载
 - [ ] 问题汇总
 
 
@@ -76,3 +76,80 @@ npm run dev
 5. 项目根目录运行`wepy build --watch`，开启实时编译。
 
 
+### 问题汇总
+
+1. 引入mock，无法使用mock中的随机图片
+
+  * mock中的随机图片是通过cavas绘制的，但小程序中的canvas是独立封装的，方法和使用形式都改变了，因此转而求其次，寻找提供图片的第三方接口作为mock中的图片数据，如http://lorempixel.com/80/80/，可以获得任意尺寸的随机图片
+
+2. 数据绑定
+
+  * `:props="data"`：在向组件传递props时，只有在data中定义的对象才能被传递
+
+  * 类名的绑定形式：`:class="{'isActive': condition/computed}"`或者`class="{{'isActive': condition/computed}}"`
+
+3. 获取路由参数
+
+  * 在Page的onLoad生命周期函数中，路由参数对象会作为该周期函数的参数传递
+  * Page.prototype.route可以获取当前路由对象
+
+4. 文件编译缓存
+
+  * 清除掉原有文件，修改文件后重新编译即可
+
+5. 组件中comoputed的使用说明
+
+  * props传值，最好设置类型，也可以用数组设置多类型，如果props为Object，computed中涉及该prop会重复计算三次，前两次为undefined，所以需要给对象中的属性给对应的默认值，以免报错中断程序；其它类型Boolean/String等，传入到组件中，computed中也只会执行一次。
+
+6. props传值
+
+  * 静态传值：父组件向子组件传递常量数据，因此只能传递String字符串类型。
+  * 动态传值：父组件向子组件传递动态数据内容，父子组件数据完全独立互不干扰。但可以通过使用.sync修饰符来达到父组件数据绑定至子组件的效果，也可以通过设置子组件props的twoWay: true来达到子组件数据绑定至父组件的效果。那如果即使用.sync修饰符，同时子组件props中添加的twoWay: true时，就可以实现数据的双向绑定了。
+  * 父级传递给自组件的prop，最好是定义在data中，可以保证数据传递无延时，不会出现第一次传递为undefined的情况。
+
+7. 组件循环使用repeat，但是computed中无法监听所有组件的变化，只能监听到循环中第一个组件中的prop变化。
+
+8. wepy项目中不能有空文件，不然会报错`TypeError: Cannot read property 'script' of null`，而且无法编译
+
+9. IOS中小程序不识别`2018-1-1 12:12:12`这种日期格式，无法转为时间戳，需要转为这种`2018/1/1 12:12:12`这种格式
+
+```javascript
+'2018-1-1 12:12:12'.replace(/-/g, '/')
+```
+
+10. 小程序最新版本库更新到1.9.1了，**但是wepy组件中定义的prop没有给默认值，或者定义的computed没有返回默认值的话，控制台会出现大量undefined的警告**，只需要增加相应的默认值以及默认返回值，就可以避免了
+
+11. `.wey`文件中引入less文件时，末尾必须**加分号;**
+
+12. wepy中已有class后，继续绑定class时，class名中超过一个`-`时，解析会出错
+
+```html
+<view class="car" :class="{{'car-time-red': condition}}"> </view>
+
+<!--编译后--> 
+<view class="car car -time red"></view>
+```
+
+13. 小程序中的跳转路由写法
+
+以app.json配置文件中的路由为例，如登陆页面路由为`pages/login`
+
+* `/pages/login`
+
+* `login`
+当前在`pages/index`页面，需要跳转至登陆页
+
+```javascript
+// 第一种写法
+wepy.navigateTo({
+  url: '/pages/login'
+})
+
+// 第二种写法，仅限于前面的路由相同，此例中都为pages
+wepy.navigateTo({
+  url: 'login'
+})
+
+```
+
+14. wepy中调用小程序的showModal时，无法监听到相应的success、fail、complete回调，需要用wx调用才可以
