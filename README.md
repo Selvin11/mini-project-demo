@@ -10,7 +10,7 @@ WePY资源汇总：[awesome-wepy](https://github.com/aben1188/awesome-wepy)
 
 WePY 是一款让小程序支持组件化开发的框架，通过预编译的手段让开发者可以选择自己喜欢的开发风格去开发小程序。框架的细节优化，Promise，Async Functions的引入都是为了能让开发小程序项目变得更加简单，高效。
 
-
+---
 ### wepy特性：
 
 * 类Vue开发风格
@@ -23,21 +23,21 @@ WePY 是一款让小程序支持组件化开发的框架，通过预编译的手
 * 支持 Sourcemap，ESLint等
 * 小程序细节优化，如请求列队，事件优化等
 
-
+---
 ### 引入的新特性：
 
 * 新增mock模块
 * 新增基于`wepy.request`的ajax类，以及rest模块进行接口管理
 * 登陆态保持方案
 
-
+---
 ### 待完成
 
 - [x] 列表页面
 - [x] 下拉刷新以及上拉加载
-- [ ] 问题汇总
+- [x] 问题汇总
 
-
+---
 ### 安装使用
 
 #### 安装（更新） wepy 命令行工具。
@@ -75,10 +75,10 @@ npm run dev
 4. `微信开发者工具`-->项目-->关闭代码压缩上传 <font style="color:red">重要：开启后，会导致真机computed, props.sync 等等属性失效。[#270](https://github.com/wepyjs/wepy/issues/270)</font>
 5. 项目根目录运行`wepy build --watch`，开启实时编译。
 
-
+---
 ### 问题汇总
 
-1. 引入mock，无法使用mock中的随机图片
+1. 引入mock，无法使用mock中的随机图片
 
   * mock中的随机图片是通过cavas绘制的，但小程序中的canvas是独立封装的，方法和使用形式都改变了，因此转而求其次，寻找提供图片的第三方接口作为mock中的图片数据，如http://lorempixel.com/80/80/，可以获得任意尺寸的随机图片
 
