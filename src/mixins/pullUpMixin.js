@@ -23,4 +23,15 @@ export default class pullUpMixin extends wepy.mixin {
       setTimeout(cb, 1000)
     }
   }
+
+  resetPullUpData () {
+    // fix: 同页面切换tab重置状态
+    this.isNoMore = false
+    this.isLoading = false
+    this.page = 1
+    // 页面滚动至顶部
+    wepy.pageScrollTo({
+      scrollTop: 0
+    })
+  }
 }

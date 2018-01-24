@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 var prod = process.env.NODE_ENV === 'production'
 
 module.exports = {
@@ -22,9 +22,6 @@ module.exports = {
     less: {
       compress: true
     },
-    /*sass: {
-      outputStyle: 'compressed'
-    },*/
     babel: {
       sourceMap: true,
       presets: [
@@ -34,7 +31,7 @@ module.exports = {
         'transform-class-properties',
         'transform-decorators-legacy',
         'transform-object-rest-spread',
-        'transform-export-extensions',
+        'transform-export-extensions'
       ]
     }
   },
@@ -46,8 +43,7 @@ module.exports = {
 }
 
 if (prod) {
-
-  delete module.exports.compilers.babel.sourcesMap;
+  delete module.exports.compilers.babel.sourcesMap
   // 压缩sass
   // module.exports.compilers['sass'] = {outputStyle: 'compressed'}
 
@@ -71,6 +67,43 @@ if (prod) {
           quality: 80
         }
       }
-    }
+    },
+    replace: [{
+      filter: /\/dist\/app\.js$/,
+      config: [{
+        // 移除mock引入
+        find: ',require("./mock/index.js")',
+        replace: ''
+      }, {
+        // 更改路由顺序
+        find: '["pages/index",',
+        replace: '['
+      }, {
+        find: 'pagePath:"pages/index"',
+        replace: 'pagePath:"pages/movie/list"' // 正式环境的入口
+      }]
+    }, {
+      filter: /\/dist\/app\.json$/,
+      config: [{
+        // 更改路由顺序
+        find: '["pages/index",',
+        replace: '['
+      }]
+    }, {
+      filter: /\/dist\/common\/ajax\.js$/,
+      config: [{
+        find: 'require("./../npm/mockjs/dist/mock.js")',
+        replace: '""'
+      }, {
+        find: 'dev.baseUrl',
+        replace: 'build.baseUrl'
+      }]
+    }, {
+      filter: /\/dist\/pages\/login\/login\.js/,
+      config: [{
+        find: 'wx.redirectTo({url:"/pages/movie/list"})',
+        replace: 'wx.switchTab({url:"/pages/movie/list"})'
+      }]
+    }]
   }
 }
